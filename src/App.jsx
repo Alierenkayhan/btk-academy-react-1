@@ -1,25 +1,59 @@
-import { Container, Row } from 'reactstrap'
-import './App.css'
-import CategoryList from './CategoryList'
-import Navi from './Navi'
-import ProductList from './ProductList'
+import { Component } from "react";
+import { Container, Row, Col } from "reactstrap";
+import "./App.css";
+import CategoryList from "./CategoryList";
+import Navi from "./Navi";
+import ProductList from "./ProductList";
 
-function App() {
-  return (
-    <>
-    <Container>
-      <Row>
-        <Row>
+export default class App extends Component {
+  state = { currentCategory: "", products: [] };
 
-        </Row>
-      </Row>
-    </Container>
+  changeCategory = (category) => {
+    this.setState({ currentCategory: category.categoryName });
+    this.getProducts(category.id);
+  };
 
-      <Navi/>
-      <CategoryList/>
-      <ProductList/>
-    </>
-  )
+  componentDidMount() {
+    this.getProducts();
+  }
+
+  getProducts = categoryId => {
+    let url ="http://localhost:3000/products";
+    if(categoryId){
+      url += "?categoryId=" + categoryId;
+    }
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => this.setState({ products: data }));
+  };
+
+  render() {
+    let productInfo = { title: "Product List" };
+    let categoryInfo = { title: "Category List" };
+    return (
+      <div>
+        <Container>
+          <Row>
+            <Navi />
+          </Row>
+          <Row>
+            <Col xs="3">
+              <CategoryList
+                currentCategory={this.state.currentCategory}
+                changeCategory={this.changeCategory}
+                info={categoryInfo}
+              />
+            </Col>
+            <Col xs="9">
+              <ProductList
+                products={this.state.products}
+                currentCategory={this.state.currentCategory}
+                info={productInfo}
+              />
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
 }
-
-export default App
