@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { Component } from "react";
-import { Table } from "reactstrap";
+import { Table, Button } from "reactstrap";
 export default class ProductList extends Component {
+
   render() {
     return (
       <div>
@@ -25,7 +26,11 @@ export default class ProductList extends Component {
                 <td>{product.productName}</td>
                 <td>{product.quantityPerUnit}</td>
                 <td>{product.unitPrice}</td>
-                <td>{product.unitsInStock}</td>
+                <td>{product.unitsInStock}</td>{" "}
+                <td>
+                  {" "}
+                  <Button onClick={()=>this.props.addToCart(product)} color="info">Add</Button>
+                </td>
               </tr>
             ))}
           </tbody>
